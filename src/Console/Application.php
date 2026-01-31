@@ -39,6 +39,12 @@ class Application
             return 0;
         }
 
+        if ($this->parser->wantsConfigs()) {
+            $this->config = $this->buildConfig();
+            $this->printConfig();
+            return 0;
+        }
+
         if ($this->parser->getScript() === null) {
             $this->printError('Error: `script` path is required. Run \'dm --help\' for usage.');
             $this->printUsage();

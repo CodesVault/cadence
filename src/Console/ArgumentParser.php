@@ -6,24 +6,26 @@ namespace DaemonManager\Console;
 
 class ArgumentParser
 {
-    private const OPTIONS = [
-        'interval'       => ['short' => 'i', 'type' => 'int'],
-        'max-memory'     => ['short' => 'm', 'type' => 'string'],
-        'max-runtime'    => ['short' => 't', 'type' => 'int'],
-        'max-iterations' => ['short' => 'n', 'type' => 'int'],
-        'lock-file'      => ['short' => 'l', 'type' => 'string'],
-        'log-file'       => ['short' => null, 'type' => 'string'],
-        'log-level'      => ['short' => null, 'type' => 'string'],
-        'env'            => ['short' => 'e', 'type' => 'string'],
-        'help'           => ['short' => 'h', 'type' => 'bool'],
-        'version'        => ['short' => 'V', 'type' => 'bool'],
-        'verbose'        => ['short' => 'v', 'type' => 'bool'],
-        'quiet'          => ['short' => 'q', 'type' => 'bool'],
-    ];
-
     private ?string $script = null;
     private array $options = [];
     private array $errors = [];
+    private array $optionDefinitions = [];
+
+    public function __construct(
+        private CommandList $commandList = new CommandList()
+    ) {
+        $this->buildOptionDefinitions();
+    }
+
+    private function buildOptionDefinitions(): void
+    {
+        foreach ($this->commandList->options() as $opt) {
+            $this->optionDefinitions[$opt['long']] = [
+                'short' => $opt['short'],
+                'type'  => $opt['type'],
+            ];
+        }
+    }
 
     public function parse(array $argv): self
     {
@@ -55,7 +57,7 @@ class ArgumentParser
 
     private function parseLongOption(string $arg, array &$argv): void
     {
-        $arg = substr($arg, 2); // Remove --
+        $arg = substr($arg, 2);
 
         if (str_contains($arg, '=')) {
             [$name, $value] = explode('=', $arg, 2);
@@ -64,12 +66,12 @@ class ArgumentParser
             $value = null;
         }
 
-        if (!isset(self::OPTIONS[$name])) {
+        if (!isset($this->optionDefinitions[$name])) {
             $this->errors[] = "Unknown option: --{$name}";
             return;
         }
 
-        $option = self::OPTIONS[$name];
+        $option = $this->optionDefinitions[$name];
 
         if ($option['type'] === 'bool') {
             $this->options[$this->toCamelCase($name)] = true;
@@ -93,7 +95,7 @@ class ArgumentParser
 
         // Find matching long option
         $longName = null;
-        foreach (self::OPTIONS as $name => $option) {
+        foreach ($this->optionDefinitions as $name => $option) {
             if ($option['short'] === $short) {
                 $longName = $name;
                 break;
@@ -105,7 +107,7 @@ class ArgumentParser
             return;
         }
 
-        $option = self::OPTIONS[$longName];
+        $option = $this->optionDefinitions[$longName];
 
         if ($option['type'] === 'bool') {
             $this->options[$this->toCamelCase($longName)] = true;
@@ -162,6 +164,11 @@ class ArgumentParser
     public function wantsVersion(): bool
     {
         return $this->options['version'] ?? false;
+    }
+
+    public function wantsConfigs(): bool
+    {
+        return $this->options['config'] ?? false;
     }
 
     public function isVerbose(): bool

@@ -87,6 +87,12 @@ class CommandList
                 'desc'  => 'Suppress all output except errors',
             ],
             [
+                'short' => 'c',
+                'long'  => 'config',
+                'type'  => 'bool',
+                'desc'  => 'Show current configurations',
+            ],
+            [
                 'short' => 'h',
                 'long'  => 'help',
                 'type'  => 'bool',
