@@ -1,0 +1,63 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// Find autoloader
+$autoloadPaths = [
+    __DIR__ . '/../vendor/autoload.php', // Local development
+    __DIR__ . '/../../../autoload.php',  // Installed as dependency
+];
+
+// Try to get global composer vendor path
+$globalAutoloadPath = getGlobalComposerVendorPath();
+if ($globalAutoloadPath !== null) {
+    $autoloadPaths[] = $globalAutoloadPath;
+}
+
+$autoloadFound = false;
+foreach ($autoloadPaths as $autoloadPath) {
+    if (file_exists($autoloadPath)) {
+        require $autoloadPath;
+        $autoloadFound = true;
+        break;
+    }
+}
+
+if (!$autoloadFound) {
+    fwrite(STDERR, "Error: Could not find autoloader. Run 'composer install'.\n");
+    exit(1);
+}
+
+use DaemonManager\Console\Application;
+
+$app = new Application();
+exit($app->run($argv));
+
+/**
+ * Get the global composer vendor path using
+ */
+function getGlobalComposerVendorPath(): ?string
+{
+    $output = [];
+    $exitCode = 0;
+
+    exec('composer config --list --global 2>/dev/null', $output, $exitCode);
+
+    if ($exitCode !== 0) {
+        return null;
+    }
+
+    foreach ($output as $line) {
+        if (str_starts_with($line, '[home]')) {
+            $globalVendorPath = trim(substr($line, 6)) . '/vendor';
+            $autoloadPath = $globalVendorPath . '/autoload.php';
+            if (is_dir($globalVendorPath) && file_exists($autoloadPath)) {
+                return $autoloadPath;
+            }
+            return null;
+        }
+    }
+
+    return null;
+}

@@ -1,0 +1,30 @@
+{
+    "name": "codesvault/daemon-manager",
+    "description": "A PHP daemon runner for executing scripts at regular intervals",
+    "license": "MIT",
+    "type": "library",
+    "keywords": ["daemon", "cron", "scheduler", "worker", "cli"],
+    "autoload": {
+        "psr-4": {
+            "DaemonManager\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Keramot UL Islam",
+            "email": "keramotul.islam@gmail.com"
+        }
+    ],
+    "scripts": {
+		"format:check": "pint --config pint.json --verbose --test",
+		"format": "pint --config pint.json --verbose"
+	},
+    "bin": ["bin/dm"],
+    "require": {
+        "php": ">=8.1",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.20.0"
+    }
+}
