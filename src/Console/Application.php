@@ -15,10 +15,15 @@ class Application
 
     private ?Config $config = null;
 
+    /** @var resource */
+    private $stderr;
+
     public function __construct(
         private ArgumentParser $parser = new ArgumentParser(),
-        private EnvLoader $envLoader = new EnvLoader()
+        private EnvLoader $envLoader = new EnvLoader(),
+        mixed $stderr = null
     ) {
+        $this->stderr = $stderr ?? STDERR;
     }
 
     public function run(array $argv): int
@@ -161,7 +166,7 @@ class Application
 
     private function printError(string $message): void
     {
-        fwrite(STDERR, $message . "\n");
+        fwrite($this->stderr, $message . "\n");
     }
 
     private function printErrors(array $errors): void
