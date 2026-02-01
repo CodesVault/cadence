@@ -24,7 +24,7 @@ class Ticker
 
     public function run(): int
     {
-        $this->beforeProcesstart();
+        $this->beforeProcessStart();
 
         while (! $this->shouldStop) {
             $this->tick();
@@ -41,7 +41,7 @@ class Ticker
         return 0;
     }
 
-    private function beforeProcesstart(): void
+    private function beforeProcessStart(): void
     {
         $this->registerSignalHandlers();
         $this->log(Logger::LEVEL_INFO, "Starting Daemon Manager for: {$this->config->getScript()}");
