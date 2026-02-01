@@ -36,24 +36,9 @@ class EnvLoader
         }
 
         $directory = dirname(realpath($scriptPath) ?: $scriptPath);
+        $envPath = $directory . '/.env';
 
-        while ($directory !== '/' && $directory !== '') {
-            $envPath = $directory . '/.env';
-
-            if (file_exists($envPath)) {
-                return $envPath;
-            }
-
-            $parent = dirname($directory);
-
-            if ($parent === $directory) {
-                break;
-            }
-
-            $directory = $parent;
-        }
-
-        return null;
+        return file_exists($envPath) ? $envPath : null;
     }
 
     private function parse(string $path): array
@@ -64,6 +49,7 @@ class EnvLoader
         // Use createArrayBacked to avoid polluting $_ENV and $_SERVER
         $dotenv = Dotenv::createArrayBacked($directory, $filename);
 
+        $envValues = [];
         try {
             $envValues = $dotenv->load();
         } catch (\Exception) {
@@ -76,6 +62,9 @@ class EnvLoader
     private function mapToConfig(array $envValues): array
     {
         $config = [];
+        if (empty($envValues)) {
+            return $config;
+        }
 
         foreach (self::ENV_MAP as $envKey => $configKey) {
             if (isset($envValues[$envKey])) {
@@ -89,7 +78,6 @@ class EnvLoader
 
     private function castValue(string $key, string $value): mixed
     {
-        // Empty string means null for optional values
         if ($value === '') {
             return null;
         }

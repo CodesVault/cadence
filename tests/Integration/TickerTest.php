@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use DaemonManager\Config\Config;
+use DaemonManager\Log\Logger;
 use DaemonManager\Runner\Ticker;
 
 beforeEach(function () {
@@ -110,7 +111,7 @@ test('can be stopped', function () {
     $config = new Config([
         'script'        => fixturesPath() . '/success_script.php',
         'interval'      => 1,
-        'maxIterations' => 100,
+        'maxIterations' => 5,
         'logLevel'      => 'quiet',
     ]);
 
@@ -122,42 +123,60 @@ test('can be stopped', function () {
     expect($ticker->getIterations())->toBe(0);
 });
 
-test('with custom logger', function () {
-    $logs = [];
-    $logger = function (string $level, string $message) use (&$logs): void {
-        $logs[] = ['level' => $level, 'message' => $message];
-    };
+test('with custom logger to file', function () {
+    $logFile = getTmpPath() . '/ticker.log';
+    $this->tempFiles[] = $logFile;
+
+    $logger = new Logger(Logger::LEVEL_INFO, $logFile);
 
     $config = new Config([
         'script'        => fixturesPath() . '/success_script.php',
         'interval'      => 1,
         'maxIterations' => 1,
-        'logLevel'      => 'info',
     ]);
 
     $ticker = new Ticker($config, $logger);
     $ticker->run();
 
-    expect($logs)->not->toBeEmpty();
-    expect($logs[0]['message'])->toContain('Starting ticker');
+    expect(file_exists($logFile))->toBeTrue();
+    $content = file_get_contents($logFile);
+    expect($content)->toContain('Starting Daemon Manager');
 });
 
 test('with debug log level', function () {
-    $logs = [];
-    $logger = function (string $level, string $message) use (&$logs): void {
-        $logs[] = ['level' => $level, 'message' => $message];
-    };
+    $logFile = getTmpPath() . '/ticker-debug.log';
+    $this->tempFiles[] = $logFile;
+
+    $logger = new Logger(Logger::LEVEL_DEBUG, $logFile);
 
     $config = new Config([
         'script'        => fixturesPath() . '/success_script.php',
         'interval'      => 1,
         'maxIterations' => 1,
-        'logLevel'      => 'debug',
     ]);
 
     $ticker = new Ticker($config, $logger);
     $ticker->run();
 
-    $debugLogs = array_filter($logs, fn ($log) => str_contains($log['message'], '[debug]'));
-    expect($debugLogs)->not->toBeEmpty();
+    $content = file_get_contents($logFile);
+    expect($content)->toContain('[debug]');
+});
+
+test('logs php errors to log file', function () {
+    $logFile = getTmpPath() . '/error-output.log';
+    $this->tempFiles[] = $logFile;
+
+    $logger = new Logger(Logger::LEVEL_DEBUG, $logFile);
+
+    $config = new Config([
+        'script'        => fixturesPath() . '/error_script.php',
+        'interval'      => 1,
+        'maxIterations' => 1,
+    ]);
+
+    $ticker = new Ticker($config, $logger);
+    $ticker->run();
+
+    $content = file_get_contents($logFile);
+    expect($content)->toContain('Undefined variable');
 });

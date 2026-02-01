@@ -6,6 +6,7 @@ namespace DaemonManager\Console;
 
 use DaemonManager\Config\Config;
 use DaemonManager\Config\EnvLoader;
+use DaemonManager\Log\Logger;
 use DaemonManager\Runner\Ticker;
 
 class Application
@@ -89,7 +90,12 @@ class Application
 
     private function startTicker(): int
     {
-        $ticker = new Ticker($this->config);
+        $logger = new Logger(
+            $this->config->getLogLevel(),
+            $this->config->getLogFile()
+        );
+
+        $ticker = new Ticker($this->config, $logger);
 
         return $ticker->run();
     }

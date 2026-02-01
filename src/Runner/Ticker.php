@@ -5,31 +5,28 @@ declare(strict_types=1);
 namespace DaemonManager\Runner;
 
 use DaemonManager\Config\Config;
+use DaemonManager\Log\Logger;
 
 class Ticker
 {
     private int $iterations = 0;
     private int $startTime;
     private bool $shouldStop = false;
-
-    /** @var callable|null */
-    private $logger;
+    private Logger $logger;
 
     public function __construct(
         private Config $config,
-        ?callable $logger = null
+        ?Logger $logger = null
     ) {
         $this->startTime = time();
-        $this->logger = $logger;
+        $this->logger = $logger ?? new Logger($config->getLogLevel());
     }
 
     public function run(): int
     {
-        $this->registerSignalHandlers();
-        $this->log('info', "Starting ticker for: {$this->config->getScript()}");
-        $this->log('info', "Interval: {$this->config->getInterval()}s");
+        $this->beforeProcesstart();
 
-        while (!$this->shouldStop) {
+        while (! $this->shouldStop) {
             $this->tick();
 
             if ($this->shouldStop()) {
@@ -39,20 +36,32 @@ class Ticker
             $this->sleep();
         }
 
-        $this->log('info', "Ticker stopped after {$this->iterations} iterations");
+        $this->afterProcessEnd();
 
         return 0;
+    }
+
+    private function beforeProcesstart(): void
+    {
+        $this->registerSignalHandlers();
+        $this->log(Logger::LEVEL_INFO, "Starting Daemon Manager for: {$this->config->getScript()}");
+        $this->log(Logger::LEVEL_INFO, "Interval: {$this->config->getInterval()}s");
+    }
+
+    private function afterProcessEnd(): void
+    {
+        $this->log(Logger::LEVEL_INFO, "Daemon Manager stopped after {$this->iterations} iterations");
     }
 
     private function tick(): void
     {
         $this->iterations++;
-        $this->log('debug', "Tick #{$this->iterations}");
+        $this->log(Logger::LEVEL_INFO, "Iteration: #{$this->iterations}");
 
         $exitCode = $this->executeScript();
 
         if ($exitCode !== 0) {
-            $this->log('warning', "Script exited with code: {$exitCode}");
+            $this->log(Logger::LEVEL_WARNING, "Script exited with code: {$exitCode}");
         }
     }
 
@@ -68,7 +77,7 @@ class Ticker
 
         if (!empty($output)) {
             $outputStr = implode("\n", $output);
-            $this->log('debug', "Output: {$outputStr}");
+            $this->log(Logger::LEVEL_DEBUG, "Output: {$outputStr}");
         }
 
         return $exitCode;
@@ -77,22 +86,22 @@ class Ticker
     private function shouldStop(): bool
     {
         if ($this->shouldStop) {
-            $this->log('info', 'Received stop signal');
+            $this->log(Logger::LEVEL_INFO, 'Received stop signal');
             return true;
         }
 
         if ($this->isMemoryExceeded()) {
-            $this->log('info', 'Memory limit exceeded, stopping');
+            $this->log(Logger::LEVEL_INFO, 'Memory limit exceeded, stopping');
             return true;
         }
 
         if ($this->isRuntimeExceeded()) {
-            $this->log('info', 'Runtime limit exceeded, stopping');
+            $this->log(Logger::LEVEL_INFO, 'Runtime limit exceeded, stopping');
             return true;
         }
 
         if ($this->isIterationsExceeded()) {
-            $this->log('info', 'Iteration limit exceeded, stopping');
+            $this->log(Logger::LEVEL_INFO, 'Iteration limit exceeded, stopping');
             return true;
         }
 
@@ -152,40 +161,19 @@ class Ticker
         pcntl_async_signals(true);
 
         pcntl_signal(SIGTERM, function () {
-            $this->log('info', 'Received SIGTERM');
+            $this->log(Logger::LEVEL_INFO, 'Received SIGTERM');
             $this->shouldStop = true;
         });
 
         pcntl_signal(SIGINT, function () {
-            $this->log('info', 'Received SIGINT');
+            $this->log(Logger::LEVEL_INFO, 'Received SIGINT');
             $this->shouldStop = true;
         });
     }
 
     private function log(string $level, string $message): void
     {
-        $configLevel = $this->config->getLogLevel();
-
-        if ($configLevel === 'quiet') {
-            return;
-        }
-
-        $levels = ['debug' => 0, 'info' => 1, 'warning' => 2, 'error' => 3];
-        $currentLevelValue = $levels[$configLevel] ?? 1;
-        $messageLevelValue = $levels[$level] ?? 1;
-
-        if ($messageLevelValue < $currentLevelValue) {
-            return;
-        }
-
-        $timestamp = date('Y-m-d H:i:s');
-        $formatted = "[{$timestamp}] [{$level}] {$message}";
-
-        if ($this->logger !== null) {
-            ($this->logger)($level, $formatted);
-        } else {
-            echo $formatted . "\n";
-        }
+        $this->logger->log($level, $message);
     }
 
     public function stop(): void
