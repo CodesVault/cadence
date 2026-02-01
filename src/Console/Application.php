@@ -63,7 +63,7 @@ class Application
 
         // Validate config
         $errors = $this->config->validate();
-        if (!empty($errors)) {
+        if (!empty($errors) && is_array($errors)) {
             $this->printErrors($errors);
             return 1;
         }
@@ -92,7 +92,9 @@ class Application
     {
         $logger = new Logger(
             $this->config->getLogLevel(),
-            $this->config->getLogFile()
+            $this->config->getLogFile(),
+            null,
+            $this->config->getLogTimezone()
         );
 
         $ticker = new Ticker($this->config, $logger);
@@ -179,13 +181,6 @@ class Application
     {
         foreach ($errors as $error) {
             $this->printError("Error: {$error}");
-        }
-    }
-
-    private function printInfo(string $message): void
-    {
-        if (!$this->parser->isQuiet()) {
-            echo $message . "\n";
         }
     }
 }

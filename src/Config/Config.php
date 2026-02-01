@@ -14,6 +14,7 @@ class Config
     private ?string $lockFile;
     private ?string $logFile;
     private string $logLevel;
+    private ?string $logTimezone;
 
     private const DEFAULTS = [
         'interval'      => 60,
@@ -23,6 +24,7 @@ class Config
         'lockFile'      => null,
         'logFile'       => null,
         'logLevel'      => 'info',
+        'logTimezone'   => null,
     ];
 
     public function __construct(array $options = [])
@@ -35,6 +37,7 @@ class Config
         $this->lockFile = $options['lockFile'] ?? self::DEFAULTS['lockFile'];
         $this->logFile = $options['logFile'] ?? self::DEFAULTS['logFile'];
         $this->logLevel = (string) ($options['logLevel'] ?? self::DEFAULTS['logLevel']);
+        $this->logTimezone = $options['logTimezone'] ?? self::DEFAULTS['logTimezone'];
     }
 
     public static function fromMerged(array $defaults, array $env, array $cli): self
@@ -96,6 +99,11 @@ class Config
     public function getLogLevel(): string
     {
         return $this->logLevel;
+    }
+
+    public function getLogTimezone(): ?string
+    {
+        return $this->logTimezone;
     }
 
     public function validate(): array
@@ -164,6 +172,7 @@ class Config
             'lockFile'      => $this->getLockFile(),
             'logFile'       => $this->logFile,
             'logLevel'      => $this->logLevel,
+            'logTimezone'   => $this->logTimezone,
         ];
     }
 }

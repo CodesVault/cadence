@@ -22,6 +22,7 @@ class Logger
 
     private string $level;
     private ?string $logFile;
+    private ?\DateTimeZone $logTimezone;
 
     /** @var resource|null */
     private $stdout;
@@ -29,11 +30,26 @@ class Logger
     public function __construct(
         string $level = self::LEVEL_INFO,
         ?string $logFile = null,
-        mixed $stdout = null
+        mixed $stdout = null,
+        ?string $logTimezone = null
     ) {
         $this->level = $level;
         $this->logFile = $logFile;
         $this->stdout = $stdout ?? STDOUT;
+        $this->logTimezone = $this->parseLogTimezone($logTimezone);
+    }
+
+    private function parseLogTimezone(?string $timezone): ?\DateTimeZone
+    {
+        if ($timezone === null) {
+            return null;
+        }
+
+        try {
+            return new \DateTimeZone($timezone);
+        } catch (\Exception) {
+            return null;
+        }
     }
 
     public function debug(string $message): void
@@ -81,7 +97,8 @@ class Logger
 
     private function format(string $level, string $message): string
     {
-        $timestamp = date('Y-m-d H:i:s');
+        $dateTime = new \DateTime('now', $this->logTimezone);
+        $timestamp = $dateTime->format('Y-m-d H:i:s');
 
         return "[{$timestamp}] [{$level}] {$message}";
     }

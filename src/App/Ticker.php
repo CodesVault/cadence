@@ -18,7 +18,12 @@ class Ticker
         ?Logger $logger = null
     ) {
         $this->startTime = time();
-        $this->logger = $logger ?? new Logger($config->getLogLevel());
+        $this->logger = $logger ?? new Logger(
+            $config->getLogLevel(),
+            $config->getLogFile(),
+            null,
+            $config->getLogTimezone()
+        );
     }
 
     public function run(): int

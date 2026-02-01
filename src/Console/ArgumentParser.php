@@ -43,7 +43,6 @@ class ArgumentParser
             } elseif (str_starts_with($arg, '-') && strlen($arg) > 1) {
                 $this->parseShortOption($arg, $argv);
             } else {
-                // Positional argument (script path)
                 if ($this->script === null) {
                     $this->script = $arg;
                 } else {
