@@ -6,6 +6,7 @@ namespace DaemonManager\Console;
 
 use DaemonManager\Config\Config;
 use DaemonManager\Config\EnvLoader;
+use DaemonManager\Runner\Ticker;
 
 class Application
 {
@@ -66,14 +67,8 @@ class Application
             $this->printConfig();
         }
 
-        // Ready to start runner
-        $this->printInfo("Starting daemon for: {$this->config->getScript()}");
-        $this->printInfo("Interval: {$this->config->getInterval()}s");
-
-        // TODO: Start the Runner (will be implemented in next phase)
-        $this->startRunner();
-
-        return 0;
+        // Start the ticker
+        return $this->startTicker();
     }
 
     private function buildConfig(): Config
@@ -87,11 +82,11 @@ class Application
         return Config::fromMerged([], $envConfig, $cliConfig);
     }
 
-    private function startRunner(): void
+    private function startTicker(): int
     {
-        // Placeholder for Runner - will be implemented in next phase
-        $this->printInfo('Runner would start here (not yet implemented)');
-        $this->printInfo('Config: ' . json_encode($this->config->toArray(), JSON_PRETTY_PRINT));
+        $ticker = new Ticker($this->config);
+
+        return $ticker->run();
     }
 
     public function getConfig(): ?Config

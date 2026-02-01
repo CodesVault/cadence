@@ -17,7 +17,14 @@
     ],
     "scripts": {
 		"format:check": "pint --config pint.json --verbose --test",
-		"format": "pint --config pint.json --verbose"
+		"format": "pint --config pint.json --verbose",
+		"test": "pest",
+		"test:integration": "pest --testsuite=Integration"
+	},
+	"config": {
+		"allow-plugins": {
+			"pestphp/pest-plugin": true
+		}
 	},
     "bin": ["bin/dm"],
     "require": {
@@ -25,6 +32,12 @@
         "vlucas/phpdotenv": "^5.6"
     },
     "require-dev": {
-        "laravel/pint": "^1.20.0"
+        "laravel/pint": "^1.20.0",
+        "pestphp/pest": "^2.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DaemonManager\\Tests\\": "tests/"
+        }
     }
 }
