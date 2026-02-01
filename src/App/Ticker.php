@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DaemonManager\App;
 
-use DaemonManager\App\Logger;
 use DaemonManager\Config\Config;
 
 class Ticker
@@ -44,13 +43,23 @@ class Ticker
     private function beforeProcessStart(): void
     {
         $this->registerSignalHandlers();
-        $this->log(Logger::LEVEL_INFO, "Starting Daemon Manager for: {$this->config->getScript()}");
-        $this->log(Logger::LEVEL_INFO, "Interval: {$this->config->getInterval()}s");
+
+        $this->log(
+            Logger::LEVEL_INFO,
+            "Starting Daemon Manager for: {$this->config->getScript()}"
+        );
+        $this->log(
+            Logger::LEVEL_INFO,
+            "Interval: {$this->config->getInterval()}s"
+        );
     }
 
     private function afterProcessEnd(): void
     {
-        $this->log(Logger::LEVEL_INFO, "Daemon Manager stopped after {$this->iterations} iterations");
+        $this->log(
+            Logger::LEVEL_INFO,
+            "Daemon Manager stopped after {$this->iterations} iterations"
+        );
     }
 
     private function tick(): void

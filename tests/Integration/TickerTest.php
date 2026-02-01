@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use DaemonManager\App\Logger;
-use DaemonManager\Config\Config;
 use DaemonManager\App\Ticker;
+use DaemonManager\Config\Config;
 
 beforeEach(function () {
     /* @disregard P1014 Undefined property - Pest dynamic property */

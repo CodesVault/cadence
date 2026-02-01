@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace DaemonManager\Console;
 
-use DaemonManager\Config\Config;
-use DaemonManager\Config\EnvLoader;
 use DaemonManager\App\Logger;
 use DaemonManager\App\Ticker;
+use DaemonManager\Config\Config;
+use DaemonManager\Config\EnvLoader;
 
 class Application
 {
