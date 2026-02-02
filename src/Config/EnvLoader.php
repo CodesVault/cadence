@@ -9,14 +9,14 @@ use Dotenv\Dotenv;
 class EnvLoader
 {
     private const ENV_MAP = [
-        'DM_INTERVAL'       => 'interval',
-        'DM_MAX_MEMORY'     => 'maxMemory',
-        'DM_MAX_RUNTIME'    => 'maxRuntime',
-        'DM_MAX_ITERATIONS' => 'maxIterations',
-        'DM_LOCK_FILE'      => 'lockFile',
-        'DM_LOG_FILE'       => 'logFile',
-        'DM_LOG_LEVEL'      => 'logLevel',
-        'DM_LOG_TIMEZONE'   => 'logTimezone',
+        'DM_INTERVAL'     => 'interval',
+        'DM_MAX_MEMORY'   => 'maxMemory',
+        'DM_MAX_RUNTIME'  => 'maxRuntime',
+        'DM_MAX_CYCLES'   => 'maxCycles',
+        'DM_LOCK_FILE'    => 'lockFile',
+        'DM_LOG_FILE'     => 'logFile',
+        'DM_LOG_LEVEL'    => 'logLevel',
+        'DM_LOG_TIMEZONE' => 'logTimezone',
     ];
 
     public function load(?string $envPath = null, ?string $scriptPath = null): array
@@ -84,7 +84,7 @@ class EnvLoader
         }
 
         return match ($key) {
-            'interval', 'maxRuntime', 'maxIterations' => (int) $value,
+            'interval', 'maxRuntime', 'maxCycles' => (int) $value,
             default => $value,
         };
     }

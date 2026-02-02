@@ -160,13 +160,13 @@ class Ticker
 
     private function isCyclesExceeded(): bool
     {
-        $maxIterations = $this->config->getMaxIterations();
+        $maxCycles = $this->config->getMaxCycles();
 
-        if ($maxIterations === null) {
+        if ($maxCycles === null) {
             return false;
         }
 
-        return $this->cycles >= $maxIterations;
+        return $this->cycles >= $maxCycles;
     }
 
     private function sleep(): void

@@ -47,8 +47,7 @@ test('shows config with valid script', function () {
     $output = ob_get_clean();
 
     expect($exitCode)->toBe(0);
-    expect($output)->toContain('Configuration:');
-    expect($output)->toContain('script:');
+    expect($output)->toContain('Default Configuration:');
     expect($output)->toContain('interval:');
 });
 
@@ -59,7 +58,7 @@ test('parses interval option', function () {
     $exitCode = $app->run([
         'dm',
         fixturesPath() . '/success_script.php',
-        '--interval=30',
+        '--interval', '30',
         '--config',
     ]);
     $output = ob_get_clean();
@@ -104,15 +103,15 @@ test('handles unknown options', function () {
     expect($exitCode)->toBe(1);
 });
 
-test('runs ticker with max iterations', function () {
+test('runs ticker with max cycles', function () {
     $app = new Application();
 
     ob_start();
     $exitCode = $app->run([
         'dm',
         fixturesPath() . '/success_script.php',
-        '--max-iterations=1',
-        '--interval=1',
+        '--max-cycles', '1',
+        '--interval', '1',
         '--quiet',
     ]);
     ob_end_clean();

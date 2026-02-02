@@ -22,10 +22,10 @@ afterEach(function () {
 
 test('executes script successfully', function () {
     $config = new Config([
-        'script'        => fixturesPath() . '/success_script.php',
-        'interval'      => 1,
-        'maxIterations' => 1,
-        'logLevel'      => 'quiet',
+        'script'    => fixturesPath() . '/success_script.php',
+        'interval'  => 1,
+        'maxCycles' => 1,
+        'logLevel'  => 'quiet',
     ]);
 
     $ticker = new Ticker($config);
@@ -35,7 +35,7 @@ test('executes script successfully', function () {
     expect($ticker->getCycles())->toBe(1);
 });
 
-test('stops after max iterations', function () {
+test('stops after max cycles', function () {
     $counterFile = createTempFile('counter');
     $this->tempFiles[] = $counterFile;
 
@@ -43,10 +43,10 @@ test('stops after max iterations', function () {
     putenv('DM_COUNTER_FILE=' . $counterFile);
 
     $config = new Config([
-        'script'        => fixturesPath() . '/counter_script.php',
-        'interval'      => 1,
-        'maxIterations' => 3,
-        'logLevel'      => 'quiet',
+        'script'    => fixturesPath() . '/counter_script.php',
+        'interval'  => 1,
+        'maxCycles' => 3,
+        'logLevel'  => 'quiet',
     ]);
 
     $ticker = new Ticker($config);
@@ -62,10 +62,10 @@ test('stops after max iterations', function () {
 
 test('continues after script failure', function () {
     $config = new Config([
-        'script'        => fixturesPath() . '/failing_script.php',
-        'interval'      => 1,
-        'maxIterations' => 2,
-        'logLevel'      => 'quiet',
+        'script'    => fixturesPath() . '/failing_script.php',
+        'interval'  => 1,
+        'maxCycles' => 2,
+        'logLevel'  => 'quiet',
     ]);
 
     $ticker = new Ticker($config);
@@ -95,10 +95,10 @@ test('stops after max runtime', function () {
 
 test('tracks elapsed time', function () {
     $config = new Config([
-        'script'        => fixturesPath() . '/success_script.php',
-        'interval'      => 1,
-        'maxIterations' => 1,
-        'logLevel'      => 'quiet',
+        'script'    => fixturesPath() . '/success_script.php',
+        'interval'  => 1,
+        'maxCycles' => 1,
+        'logLevel'  => 'quiet',
     ]);
 
     $ticker = new Ticker($config);
@@ -109,10 +109,10 @@ test('tracks elapsed time', function () {
 
 test('can be stopped', function () {
     $config = new Config([
-        'script'        => fixturesPath() . '/success_script.php',
-        'interval'      => 1,
-        'maxIterations' => 5,
-        'logLevel'      => 'quiet',
+        'script'    => fixturesPath() . '/success_script.php',
+        'interval'  => 1,
+        'maxCycles' => 5,
+        'logLevel'  => 'quiet',
     ]);
 
     $ticker = new Ticker($config);
@@ -130,9 +130,9 @@ test('with custom logger to file', function () {
     $logger = new Logger(Logger::LEVEL_INFO, $logFile);
 
     $config = new Config([
-        'script'        => fixturesPath() . '/success_script.php',
-        'interval'      => 1,
-        'maxIterations' => 1,
+        'script'    => fixturesPath() . '/success_script.php',
+        'interval'  => 1,
+        'maxCycles' => 1,
     ]);
 
     $ticker = new Ticker($config, $logger);
@@ -150,9 +150,9 @@ test('with debug log level', function () {
     $logger = new Logger(Logger::LEVEL_DEBUG, $logFile);
 
     $config = new Config([
-        'script'        => fixturesPath() . '/success_script.php',
-        'interval'      => 1,
-        'maxIterations' => 1,
+        'script'    => fixturesPath() . '/success_script.php',
+        'interval'  => 1,
+        'maxCycles' => 1,
     ]);
 
     $ticker = new Ticker($config, $logger);
@@ -169,9 +169,9 @@ test('logs php errors to log file', function () {
     $logger = new Logger(Logger::LEVEL_DEBUG, $logFile);
 
     $config = new Config([
-        'script'        => fixturesPath() . '/error_script.php',
-        'interval'      => 1,
-        'maxIterations' => 1,
+        'script'    => fixturesPath() . '/error_script.php',
+        'interval'  => 1,
+        'maxCycles' => 1,
     ]);
 
     $ticker = new Ticker($config, $logger);

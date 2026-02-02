@@ -128,11 +128,11 @@ class Application
         // Options
         echo "Options:\n";
         foreach ($commandList->options() as $opt) {
-            $short = $opt['short'] ? "-{$opt['short']}, " : '    ';
+            $short = $opt['short'] ? "-{$opt['short']} " : '    ';
             $long = "--{$opt['long']}";
 
             if ($opt['type'] !== 'bool') {
-                $long .= '=' . strtoupper($opt['type'] === 'int' ? 'N' : $opt['long']);
+                $long .= ' <' . strtoupper($opt['type']) . '>';
             }
 
             echo sprintf("  %s%-22s %s\n", $short, $long, $opt['desc']);
@@ -164,8 +164,11 @@ class Application
 
     private function printConfig(): void
     {
-        echo "Configuration:\n";
+        echo "Default Configuration:\n\n";
         foreach ($this->config->toArray() as $key => $value) {
+            if ($key === 'script') {
+                continue;
+            }
             $display = $value ?? 'null';
             echo "  {$key}: {$display}\n";
         }

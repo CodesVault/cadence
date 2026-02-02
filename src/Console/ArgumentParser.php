@@ -56,14 +56,8 @@ class ArgumentParser
 
     private function parseLongOption(string $arg, array &$argv): void
     {
-        $arg = substr($arg, 2);
-
-        if (str_contains($arg, '=')) {
-            [$name, $value] = explode('=', $arg, 2);
-        } else {
-            $name = $arg;
-            $value = null;
-        }
+        $name = substr($arg, 2);
+        $value = null;
 
         if (!isset($this->optionDefinitions[$name])) {
             $this->errors[] = "Unknown option: --{$name}";
@@ -74,18 +68,19 @@ class ArgumentParser
 
         if ($option['type'] === 'bool') {
             $this->options[$this->toCamelCase($name)] = true;
-        } else {
-            if ($value === null && count($argv) > 0 && !str_starts_with($argv[0], '-')) {
-                $value = array_shift($argv);
-            }
-
-            if ($value === null) {
-                $this->errors[] = "Option --{$name} requires a value";
-                return;
-            }
-
-            $this->options[$this->toCamelCase($name)] = $this->castValue($option['type'], $value);
+            return;
         }
+
+        if ($value === null && count($argv) > 0 && !str_starts_with($argv[0], '-')) {
+            $value = array_shift($argv);
+        }
+
+        if ($value === null) {
+            $this->errors[] = "Option --{$name} requires a value";
+            return;
+        }
+
+        $this->options[$this->toCamelCase($name)] = $this->castValue($option['type'], $value);
     }
 
     private function parseShortOption(string $arg, array &$argv): void
@@ -199,13 +194,13 @@ class ArgumentParser
         }
 
         $mapping = [
-            'interval'      => 'interval',
-            'maxMemory'     => 'maxMemory',
-            'maxRuntime'    => 'maxRuntime',
-            'maxIterations' => 'maxIterations',
-            'lockFile'      => 'lockFile',
-            'logFile'       => 'logFile',
-            'logLevel'      => 'logLevel',
+            'interval'   => 'interval',
+            'maxMemory'  => 'maxMemory',
+            'maxRuntime' => 'maxRuntime',
+            'maxCycles'  => 'maxCycles',
+            'lockFile'   => 'lockFile',
+            'logFile'    => 'logFile',
+            'logLevel'   => 'logLevel',
         ];
 
         foreach ($mapping as $option => $configKey) {

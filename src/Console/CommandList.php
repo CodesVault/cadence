@@ -40,9 +40,9 @@ class CommandList
             ],
             [
                 'short' => 'n',
-                'long'  => 'max-iterations',
+                'long'  => 'max-cycles',
                 'type'  => 'int',
-                'desc'  => 'Maximum number of iterations before restart [default: unlimited]',
+                'desc'  => 'Maximum number of cycles before restart [default: unlimited]',
             ],
             [
                 'short' => 'l',
@@ -51,13 +51,13 @@ class CommandList
                 'desc'  => 'Path to lock file to prevent multiple instances [default: none]',
             ],
             [
-                'short' => null,
+                'short' => 'lf',
                 'long'  => 'log-file',
                 'type'  => 'string',
                 'desc'  => 'Path to log file [default: none]',
             ],
             [
-                'short' => null,
+                'short' => 'll',
                 'long'  => 'log-level',
                 'type'  => 'string',
                 'desc'  => 'Logging level (debug, info, warning, error) [default: info]',
@@ -105,8 +105,8 @@ class CommandList
     {
         return [
             'dm /var/www/html/wp-cron.php',
-            'dm /var/www/html/wp-cron.php --interval=10 --max-memory=256M',
-            'dm /var/www/html/artisan schedule:run --env=/var/www/.env',
+            'dm /var/www/html/wp-cron.php --interval 10 --max-memory 256M',
+            'dm /var/www/html/artisan schedule:run --env /var/www/.env',
         ];
     }
 
@@ -116,10 +116,11 @@ class CommandList
             'DM_INTERVAL',
             'DM_MAX_MEMORY',
             'DM_MAX_RUNTIME',
-            'DM_MAX_ITERATIONS',
+            'DM_MAX_CYCLES',
             'DM_LOCK_FILE',
             'DM_LOG_FILE',
             'DM_LOG_LEVEL',
+            'DM_LOG_TIMEZONE',
         ];
     }
 }
