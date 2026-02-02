@@ -11,7 +11,6 @@ class Config
     private string $maxMemory;
     private ?int $maxRuntime;
     private ?int $maxCycles;
-    private ?string $lockFile;
     private ?string $logFile;
     private string $logLevel;
     private ?string $logTimezone;
@@ -21,7 +20,6 @@ class Config
         'maxMemory'   => '128M',
         'maxRuntime'  => 3600,
         'maxCycles'   => null,
-        'lockFile'    => null,
         'logFile'     => null,
         'logLevel'    => 'info',
         'logTimezone' => null,
@@ -34,7 +32,6 @@ class Config
         $this->maxMemory = (string) ($options['maxMemory'] ?? self::DEFAULTS['maxMemory']);
         $this->maxRuntime = isset($options['maxRuntime']) ? (int) $options['maxRuntime'] : self::DEFAULTS['maxRuntime'];
         $this->maxCycles = isset($options['maxCycles']) ? (int) $options['maxCycles'] : self::DEFAULTS['maxCycles'];
-        $this->lockFile = $options['lockFile'] ?? self::DEFAULTS['lockFile'];
         $this->logFile = $options['logFile'] ?? self::DEFAULTS['logFile'];
         $this->logLevel = (string) ($options['logLevel'] ?? self::DEFAULTS['logLevel']);
         $this->logTimezone = $options['logTimezone'] ?? self::DEFAULTS['logTimezone'];
@@ -80,15 +77,6 @@ class Config
     public function getMaxCycles(): ?int
     {
         return $this->maxCycles;
-    }
-
-    public function getLockFile(): ?string
-    {
-        if ($this->lockFile === null && $this->script !== '') {
-            return sys_get_temp_dir() . '/dm-' . md5($this->script) . '.lock';
-        }
-
-        return $this->lockFile;
     }
 
     public function getLogFile(): ?string
@@ -169,7 +157,6 @@ class Config
             'maxMemory'   => $this->maxMemory,
             'maxRuntime'  => $this->maxRuntime,
             'maxCycles'   => $this->maxCycles,
-            'lockFile'    => $this->getLockFile(),
             'logFile'     => $this->logFile,
             'logLevel'    => $this->logLevel,
             'logTimezone' => $this->logTimezone,

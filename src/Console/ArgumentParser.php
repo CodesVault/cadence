@@ -198,7 +198,6 @@ class ArgumentParser
             'maxMemory'  => 'maxMemory',
             'maxRuntime' => 'maxRuntime',
             'maxCycles'  => 'maxCycles',
-            'lockFile'   => 'lockFile',
             'logFile'    => 'logFile',
             'logLevel'   => 'logLevel',
         ];

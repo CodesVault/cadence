@@ -45,12 +45,6 @@ class CommandList
                 'desc'  => 'Maximum number of cycles before restart [default: unlimited]',
             ],
             [
-                'short' => 'l',
-                'long'  => 'lock-file',
-                'type'  => 'string',
-                'desc'  => 'Path to lock file to prevent multiple instances [default: none]',
-            ],
-            [
                 'short' => 'lf',
                 'long'  => 'log-file',
                 'type'  => 'string',
@@ -117,7 +111,6 @@ class CommandList
             'DM_MAX_MEMORY',
             'DM_MAX_RUNTIME',
             'DM_MAX_CYCLES',
-            'DM_LOCK_FILE',
             'DM_LOG_FILE',
             'DM_LOG_LEVEL',
             'DM_LOG_TIMEZONE',

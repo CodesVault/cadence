@@ -74,6 +74,8 @@ class Ticker
 
         $exitCode = $this->executeScript();
 
+        $this->log(Logger::LEVEL_INFO, $this->resourceUsages());
+
         if ($exitCode !== 0) {
             $this->log(Logger::LEVEL_WARNING, "Script exited with code: {$exitCode}");
         }
@@ -218,5 +220,17 @@ class Ticker
     public function getElapsedTime(): int
     {
         return time() - $this->startTime;
+    }
+
+    private function resourceUsages(): string
+    {
+        $memoryUsage = memory_get_usage(true) / 1024 / 1024;
+        $loadAverage = sys_getloadavg();
+
+        return sprintf(
+            'Memory Usage: %.2f MB | Load Average (last 1 minute): %.2f',
+            $memoryUsage,
+            $loadAverage[0],
+        );
     }
 }

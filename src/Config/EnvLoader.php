@@ -13,7 +13,6 @@ class EnvLoader
         'DM_MAX_MEMORY'   => 'maxMemory',
         'DM_MAX_RUNTIME'  => 'maxRuntime',
         'DM_MAX_CYCLES'   => 'maxCycles',
-        'DM_LOCK_FILE'    => 'lockFile',
         'DM_LOG_FILE'     => 'logFile',
         'DM_LOG_LEVEL'    => 'logLevel',
         'DM_LOG_TIMEZONE' => 'logTimezone',
