@@ -114,6 +114,6 @@ The following environment variables can be used to configure Cadence:
 | `CAD_INTERVAL` | Interval between Cycles in seconds | 60 |
 | `CAD_MAX_MEMORY` | Maximum memory usage before restart (e.g., 128M, 1G) | 128M |
 | `CAD_MAX_RUNTIME` | Maximum runtime in seconds before restart | 3600 |
-| `CAD_MAX_CYCLES` | | Maximum number of cycles before restart | unlimited |
+| `CAD_MAX_CYCLES` | Maximum number of cycles before restart | unlimited |
 | `CAD_LOG_FILE` | Path to log file | none |
 | `CAD_LOG_LEVEL` | Logging level (debug, info, warning, error) | info |    
