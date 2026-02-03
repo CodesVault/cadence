@@ -21,7 +21,6 @@ Cadence is a PHP library designed to facilitate the management of background pro
 
 - PHP 8.1 or higher
 - Composer 2.x for installation
-- Linux server with Supervisor installed for production use
 
 <br>
 
@@ -79,7 +78,7 @@ cadence /var/www/html/wp-cron.php
 
 cadence /var/www/html/wp-cron.php --interval 10 --max-memory 256M
 
-cadence /var/www/html/artisan schedule:run --env /var/www/.env
+cadence '/var/www/html/artisan schedule:run' --env /var/www/.env
 
 # with cli command
 cadence 'curl -s https://example.com/webhook' -i 60
@@ -123,3 +122,58 @@ The following environment variables can be used to configure Cadence:
 | `CAD_LOG_FILE` | Path to log file | none |
 | `CAD_LOG_LEVEL` | Logging level (debug, info, warning, error) | info |
 | `CAD_DEBUG_LOG_FILE` | Path to debug log file | none |
+
+<br>
+
+## Production Usage with Supervisor
+
+In production environments, it's recommended to use Cadence in conjunction with [Supervisor](https://supervisord.org/).
+
+### Supervisor Installation & Configuration
+
+Supervisor is a process control system that allows you to monitor and control long-running background processes. Install Supervisor on your Linux server:
+
+```bash
+sudo apt-get install supervisor
+```
+
+Create a Supervisor configuration file for Cadence process. For example, create a file named `cadence.conf` in `/etc/supervisor/conf.d/` with the following configuration:
+
+```ini
+[program:cadence]
+command=cadence /var/www/html/wp-cron.php
+directory=/var/www/html
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/cadence_wp_cron.err.log
+stdout_logfile=/var/log/cadence_wp_cron.out.log
+user=www-data
+```
+
+<br>
+
+Now make a `.env` file in `/var/www/html/` directory for environment variables if needed. Cadence will automatically load the environment variables from this file.
+
+```env
+CAD_LOG_FILE=/var/www/html/cad.log
+CAD_LOG_LEVEL=debug
+CAD_DEBUG_LOG_FILE=/var/www/html/cad_debug.log
+CAD_INTERVAL=5
+CAD_MAX_CYCLES=6
+CAD_MAX_MEMORY=128M
+```
+
+### Managing Cadence with Supervisor
+
+You can manage the Cadence process using Supervisor commands:
+
+```bash
+# Start the Cadence process
+sudo supervisorctl start cadence
+# Stop the Cadence process
+sudo supervisorctl stop cadence
+# Restart the Cadence process
+sudo supervisorctl restart cadence
+# Check the status of the Cadence process
+sudo supervisorctl status cadence
+```

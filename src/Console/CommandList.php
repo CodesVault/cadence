@@ -100,7 +100,7 @@ class CommandList
         return [
             'cadence /var/www/html/wp-cron.php',
             'cadence /var/www/html/wp-cron.php --interval 10 --max-memory 256M',
-            'cadence /var/www/html/artisan schedule:run --env /var/www/.env',
+            "cadence '/var/www/html/artisan schedule:run' --env /var/www/html/.env",
             "cadence 'curl -s https://example.com/webhook' -i 60",
             "cadence 'echo hello' --max-cycles 5",
         ];
