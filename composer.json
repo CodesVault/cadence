@@ -1,9 +1,10 @@
 {
     "name": "codesvault/cadence",
     "description": "Cadence creates and manages PHP daemons with ease for running all heavy-lifting tasks in the background.",
+    "version": "1.0.0",
     "license": "MIT",
     "type": "library",
-    "keywords": ["daemon", "cron", "scheduler", "worker", "cli"],
+    "keywords": ["daemon", "cron", "scheduler", "worker", "cli", "background job", "background process", "process manager"],
     "autoload": {
         "psr-4": {
             "Cadence\\": "src/"
