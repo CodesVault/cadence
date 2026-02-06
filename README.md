@@ -6,6 +6,12 @@ Running cron jobs and background tasks in PHP typically requires system-level co
 
 <br>
 
+[![Latest Version](https://img.shields.io/packagist/v/codesvault/cadence.svg)](https://packagist.org/packages/codesvault/cadence)
+[![PHP Version](https://img.shields.io/packagist/php-v/codesvault/cadence.svg)](https://packagist.org/packages/codesvault/cadence)
+[![License](https://img.shields.io/packagist/l/codesvault/cadence.svg)](LICENSE)
+[![Composer](https://img.shields.io/badge/composer-2.0%2B-blue.svg)](https://getcomposer.org/)
+<!-- [![Total Downloads](https://img.shields.io/packagist/dt/codesvault/cadence.svg)](https://packagist.org/packages/codesvault/cadence) -->
+
 ## Features
 
 - Use with Supervisor for robust process management in production environments
@@ -19,14 +25,7 @@ Running cron jobs and background tasks in PHP typically requires system-level co
 
 <br>
 
-[![Cadence](https://pub-5fc605b04a4c467ca4a3fbed361deaf9.r2.dev/Screenshot%202026-02-04%20at%205.15.54%E2%80%AFPM.png)](https://pub-5fc605b04a4c467ca4a3fbed361deaf9.r2.dev/cadence.mp4)
-
-<br>
-
-## Prerequisites
-
-- PHP 8.1 or higher
-- Composer 2.x for installation
+[![Cadence](https://pub-5fc605b04a4c467ca4a3fbed361deaf9.r2.dev/cadence-demo/cadence-demo-Cover.jpg)](https://pub-5fc605b04a4c467ca4a3fbed361deaf9.r2.dev/cadence-demo/cadence-demo.mp4)
 
 <br>
 
