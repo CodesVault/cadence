@@ -8,6 +8,8 @@ class ArgumentParser
 {
     private ?string $script = null;
     private bool $isCliCommand = false;
+    private ?string $subcommand = null;
+    private ?string $subcommandTarget = null;
     private array $options = [];
     private array $errors = [];
     private array $optionDefinitions = [];
@@ -35,13 +37,26 @@ class ArgumentParser
         while (count($argv) > 0) {
             $arg = array_shift($argv);
 
+            // check if it's a option
             if (str_starts_with($arg, '--')) {
                 $this->parseLongOption($arg, $argv);
+                continue;
             } elseif (str_starts_with($arg, '-') && strlen($arg) > 1) {
                 $this->parseShortOption($arg, $argv);
+                continue;
+            }
+
+            // check if it's a subcommand
+            if (in_array($arg, CommandList::SUBCOMMANDS, true)) {
+                $this->subcommand = $arg;
+
+                // stop/status require a target name
+                if ($arg !== 'list') {
+                    $this->subcommandTarget = array_shift($argv);
+                }
             } else {
                 $this->script = $arg;
-                $this->isCliCommand = !$this->looksLikePhpScript($arg);
+                $this->isCliCommand = ! $this->looksLikePhpScript($arg);
             }
         }
 
@@ -139,21 +154,6 @@ class ArgumentParser
         return $this->isCliCommand;
     }
 
-    public function getOptions(): array
-    {
-        return $this->options;
-    }
-
-    public function getOption(string $name, mixed $default = null): mixed
-    {
-        return $this->options[$name] ?? $default;
-    }
-
-    public function hasOption(string $name): bool
-    {
-        return isset($this->options[$name]);
-    }
-
     public function wantsHelp(): bool
     {
         return $this->options['help'] ?? false;
@@ -219,5 +219,25 @@ class ArgumentParser
     public function getEnvPath(): ?string
     {
         return $this->options['env'] ?? null;
+    }
+
+    public function hasSubcommand(): bool
+    {
+        return $this->subcommand !== null;
+    }
+
+    public function getSubcommand(): ?string
+    {
+        return $this->subcommand;
+    }
+
+    public function getSubcommandTarget(): ?string
+    {
+        return $this->subcommandTarget;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->options['name'] ?? null;
     }
 }

@@ -6,6 +6,8 @@ namespace Cadence\Console;
 
 class CommandList
 {
+    public const SUBCOMMANDS = ['stop', 'status', 'list'];
+
     public function arguments(): array
     {
         return [
@@ -13,6 +15,24 @@ class CommandList
                 'name' => 'script|command',
                 'type' => 'string',
                 'desc' => 'Path to PHP script (.php) OR CLI command (quoted string)',
+            ],
+        ];
+    }
+
+    public function subcommands(): array
+    {
+        return [
+            [
+                'name' => 'stop <name>',
+                'desc' => 'Stop a running daemon by name',
+            ],
+            [
+                'name' => 'status <name>',
+                'desc' => 'Show status of a daemon by name',
+            ],
+            [
+                'name' => 'list',
+                'desc' => 'List all registered daemons',
             ],
         ];
     }
@@ -81,6 +101,12 @@ class CommandList
                 'desc'  => 'Show current configurations',
             ],
             [
+                'short' => '',
+                'long'  => 'name',
+                'type'  => 'string',
+                'desc'  => 'Name for the daemon process [default: auto-derived]',
+            ],
+            [
                 'short' => 'h',
                 'long'  => 'help',
                 'type'  => 'bool',
@@ -94,6 +120,7 @@ class CommandList
         return [
             'cadence /var/www/html/wp-cron.php',
             'cadence /var/www/html/wp-cron.php --interval 10 --max-memory 256M',
+            'cadence /var/www/html/wp-cron.php --name my-cron',
             "cadence '/var/www/html/artisan schedule:run' --env /var/www/html/.env",
             "cadence 'curl -s https://example.com/webhook' -i 60",
             "cadence 'echo hello' --max-cycles 5",
