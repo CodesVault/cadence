@@ -119,8 +119,7 @@ cadence 'echo hello' -n 5
 | `-lf` | `--log-file` | STRING | Path to log file [default: none] |
 | `-ll` | `--log-level` | STRING | Logging level (debug, info, warning, error) [default: info] |
 | `-e` | `--env` | STRING | Path to .env file for configuration [default: auto-detect] |
-| `-V` | `--version` | - | Display the version information |
-| `-v` | `--verbose` | - | Enable verbose output |
+| `-v` | `--version` | - | Display the version information |
 | `-q` | `--quiet` | - | Suppress all output except errors |
 | `-c` | `--config` | - | Show current configurations |
 | `-h` | `--help` | - | Display this help message |
