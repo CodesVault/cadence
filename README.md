@@ -108,6 +108,16 @@ cadence 'echo hello' -n 5
 
 <br>
 
+### Commands
+
+| Name | Description |
+|------|-------------|
+| `stop <name>` | Stop a running daemon by name |
+| `status <name>` | Show status of a daemon by name |
+| `list` | List all registered daemons |
+
+<br>
+
 ### Options
 
 | Short | Long | Type | Description |
@@ -122,6 +132,7 @@ cadence 'echo hello' -n 5
 | `-v` | `--version` | - | Display the version information |
 | `-q` | `--quiet` | - | Suppress all output except errors |
 | `-c` | `--config` | - | Show current configurations |
+|  | `--name` | STRING | Name for the daemon process [default: auto-derived] |
 | `-h` | `--help` | - | Display this help message |
 
 <br>
