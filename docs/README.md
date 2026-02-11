@@ -201,34 +201,6 @@ CAD_DEBUG_LOG_FILE=/var/log/cadence_debug.log
 
 ---
 
-## Logging
-
-### Log Levels
-
-| Level | Priority | Description |
-|-------|----------|-------------|
-| `debug` | 0 | Detailed diagnostic information |
-| `info` | 1 | General informational messages |
-| `warning` | 2 | Potential issues |
-| `error` | 3 | Error messages only |
-| `quiet` | 4 | Suppress all output |
-
-### Log Format
-
-```
-[2026-02-05 12:30:45] [info] Cadence started
-[2026-02-05 12:30:45] [info] Executing: /var/www/html/wp-cron.php
-[2026-02-05 12:30:46] [info] Memory: 12.5 MB | Load: 0.45
-```
-
-### File Logging
-
-```bash
-cadence /path/to/script.php --log-file /var/log/cadence.log
-```
-
----
-
 ## Process Registry
 
 Cadence includes a built-in **process registry** that tracks all running daemons. Each daemon is registered with a name, PID, and script path in `~/.cadence/registry/`.
@@ -283,6 +255,34 @@ Stop a running daemon by name:
 
 ```bash
 cadence stop wp-cron
+```
+
+---
+
+## Logging
+
+### Log Levels
+
+| Level | Priority | Description |
+|-------|----------|-------------|
+| `debug` | 0 | Detailed diagnostic information |
+| `info` | 1 | General informational messages |
+| `warning` | 2 | Potential issues |
+| `error` | 3 | Error messages only |
+| `quiet` | 4 | Suppress all output |
+
+### Log Format
+
+```
+[2026-02-05 12:30:45] [info] Cadence started
+[2026-02-05 12:30:45] [info] Executing: /var/www/html/wp-cron.php
+[2026-02-05 12:30:46] [info] Memory: 12.5 MB | Load: 0.45
+```
+
+### File Logging
+
+```bash
+cadence /path/to/script.php --log-file /var/log/cadence.log
 ```
 
 ---

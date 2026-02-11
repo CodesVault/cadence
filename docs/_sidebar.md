@@ -14,8 +14,8 @@
 * **Features**
   * [Process Registry](#process-registry)
   * [Logging](#logging)
-  * [Process Management](#process-management)
   * [Debug Logging](#debug-logging)
+  * [Process Management](#process-management)
 
 * **Deployment**
   * [Supervisor Setup](#production-deployment-with-supervisor)
