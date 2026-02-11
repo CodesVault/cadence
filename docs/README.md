@@ -59,11 +59,18 @@ Verify installation:
 cadence --help
 
 # result:
-Cadence v1.0.1
+
+Cadence v1.0.2
 
 Usage:
   cadence <script.php> [options]
   cadence '<command>'  [options]
+  cadence <subcommand> [name]
+
+Commands:
+  stop <name>                Stop a running daemon by name
+  status <name>              Show status of a daemon by name
+  list                       List all registered daemons
 
 Arguments:
   <script|command>           Path to PHP script (.php) OR CLI command (quoted string)
@@ -79,11 +86,13 @@ Options:
   -v   --version               Display the version information
   -q   --quiet                 Suppress all output except errors
   -c   --config                Show current configurations
+       --name <STRING>         Name for the daemon process [default: auto-derived]
   -h   --help                  Display this help message
 
 Examples:
   cadence /var/www/html/wp-cron.php
   cadence /var/www/html/wp-cron.php --interval 10 --max-memory 256M
+  cadence /var/www/html/wp-cron.php --name my-cron
   cadence '/var/www/html/artisan schedule:run' --env /var/www/html/.env
   cadence 'curl -s https://example.com/webhook' -i 60
   cadence 'echo hello' --max-cycles 5
@@ -147,10 +156,10 @@ cadence /path/to/script.php --config
 | `-lf` | `--log-file` | stdout | Path to log file |
 | `-ll` | `--log-level` | `info` | Log level (debug, info, warning, error, quiet) |
 | `-e` | `--env` | auto-detect | Path to .env file |
-| `-v` | `--verbose` | - | Show configuration on startup |
+| `-v` | `--version` | - | Display version |
 | `-q` | `--quiet` | - | Suppress all output except errors |
 | `-c` | `--config` | - | Display current configuration |
-| `-V` | `--version` | - | Display version |
+|  | `--name` | auto-derived | Name for the daemon process |
 | `-h` | `--help` | - | Display help |
 
 ### Memory Units
@@ -242,6 +251,64 @@ Array
 
 ---
 
+## Process Registry
+
+Cadence includes a built-in **process registry** that tracks all running daemons. Each daemon is registered with a name, PID, and script path in `~/.cadence/registry/`.
+
+### Naming Daemons
+
+Assign a custom name to a daemon using `--name`:
+
+```bash
+cadence /var/www/html/wp-cron.php --name my-proc
+```
+
+When `--name` is not provided, Cadence auto-derives the name from the script filename. For example, `/var/www/html/wp-cron.php` becomes `wp-cron`.
+
+### Listing Daemons
+
+View all registered daemons and their status:
+
+```bash
+cadence list
+```
+
+Output:
+```
+NAME                 PID      SCRIPT                                   STATUS
+--------------------------------------------------------------------------------
+wp-cron              3545    /var/www/html/web/wp-cron.php             running
+worker               1238    /var/www/html/another-web/worker.php      stopped
+proc                 5267    /var/www/html/jobs/job.php                running
+```
+
+### Checking Status
+
+View detailed information about a specific daemon:
+
+```bash
+cadence status wp-cron
+```
+
+Output:
+```
+Name:       wp-cron
+PID:        12345
+Script:     /var/www/html/wp-cron.php
+Started:    2026-02-11 12:30:45
+Status:     running
+```
+
+### Stopping Daemons
+
+Stop a running daemon by name:
+
+```bash
+cadence stop wp-cron
+```
+
+---
+
 ## Process Management
 
 ### Execution Cycle
@@ -260,13 +327,6 @@ Cadence gracefully stops when:
 - **Memory limit exceeded** — Configurable via `--max-memory`
 - **Runtime limit reached** — Configurable via `--max-runtime`
 - **Cycle limit reached** — Configurable via `--max-cycles`
-
-### Signal Handling
-
-Cadence handles these signals for graceful shutdown:
-
-- `SIGTERM` — Termination request
-- `SIGINT` — Interrupt (Ctrl+C)
 
 ---
 
@@ -363,6 +423,22 @@ cadence /var/www/html/worker.php --max-memory 512M --max-runtime 3600
 
 ```bash
 cadence /path/to/script.php --interval 5 --log-level debug
+```
+
+### Named Daemons
+
+```bash
+# Start with a custom name
+cadence /var/www/html/wp-cron.php --name wp-cron
+
+# Check its status
+cadence status wp-cron
+
+# List all daemons
+cadence list
+
+# Stop it
+cadence stop wp-cron
 ```
 
 ### Limited Cycles for Testing

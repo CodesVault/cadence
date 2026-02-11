@@ -6,3 +6,4 @@
 /tests export-ignore
 /phpunit.xml export-ignore
 /pint.json export-ignore
+/CONTRIBUTING.md export-ignore

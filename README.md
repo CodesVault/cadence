@@ -6,6 +6,28 @@ Running cron jobs and background tasks in PHP typically requires system-level co
 
 <br>
 
+[![Total Downloads](https://img.shields.io/packagist/dt/codesvault/cadence.svg)](https://packagist.org/packages/codesvault/cadence)
+[![Latest Version](https://img.shields.io/packagist/v/codesvault/cadence.svg)](https://packagist.org/packages/codesvault/cadence)
+
+[![PHP Version](https://img.shields.io/packagist/php-v/codesvault/cadence.svg)](https://packagist.org/packages/codesvault/cadence)
+[![Composer](https://img.shields.io/badge/composer-2.0%2B-blue.svg)](https://getcomposer.org/)
+[![License](https://img.shields.io/packagist/l/codesvault/cadence.svg)](LICENSE)
+
+<br>
+
+## Why Cadence?
+
+| Challenge | Without Cadence | With Cadence |
+|-----------|----------------|--------------|
+| **Running background tasks** | Write custom loop scripts, manage sleep cycles, handle exits manually | `cadence /path/to/script.php` — done |
+| **Memory leaks** | Processes grow until they crash or get killed | Auto-restarts when memory limit is reached |
+| **Process crashes** | Cron runs once and fails silently, no retry | Continuous execution with structured error logging |
+| **Debugging** | Tail log files, add var_dump, redeploy | Real-time output in terminal or dedicated debug log file |
+| **Configuration** | Edit crontab, modify system configs, restart services | `.env` file or CLI flags, no system changes needed |
+| **Framework dependency** | Laravel Scheduler, Symfony Messenger — locked to one framework | Framework agnostic, works with any PHP script or CLI command |
+
+<br>
+
 ## Features
 
 - Use with Supervisor for robust process management in production environments
@@ -19,14 +41,9 @@ Running cron jobs and background tasks in PHP typically requires system-level co
 
 <br>
 
-[![Cadence](https://pub-5fc605b04a4c467ca4a3fbed361deaf9.r2.dev/Screenshot%202026-02-04%20at%205.15.54%E2%80%AFPM.png)](https://pub-5fc605b04a4c467ca4a3fbed361deaf9.r2.dev/cadence.mp4)
+*Click to play Demo Video* ⬇️
 
-<br>
-
-## Prerequisites
-
-- PHP 8.1 or higher
-- Composer 2.x for installation
+[![Cadence](https://pub-5fc605b04a4c467ca4a3fbed361deaf9.r2.dev/cadence-demo/cadence-demo-Cover.jpg)](https://pub-5fc605b04a4c467ca4a3fbed361deaf9.r2.dev/cadence-demo/cadence-demo.mp4)
 
 <br>
 
@@ -91,6 +108,16 @@ cadence 'echo hello' -n 5
 
 <br>
 
+### Commands
+
+| Name | Description |
+|------|-------------|
+| `stop <name>` | Stop a running daemon by name |
+| `status <name>` | Show status of a daemon by name |
+| `list` | List all registered daemons |
+
+<br>
+
 ### Options
 
 | Short | Long | Type | Description |
@@ -102,10 +129,10 @@ cadence 'echo hello' -n 5
 | `-lf` | `--log-file` | STRING | Path to log file [default: none] |
 | `-ll` | `--log-level` | STRING | Logging level (debug, info, warning, error) [default: info] |
 | `-e` | `--env` | STRING | Path to .env file for configuration [default: auto-detect] |
-| `-V` | `--version` | - | Display the version information |
-| `-v` | `--verbose` | - | Enable verbose output |
+| `-v` | `--version` | - | Display the version information |
 | `-q` | `--quiet` | - | Suppress all output except errors |
 | `-c` | `--config` | - | Show current configurations |
+|  | `--name` | STRING | Name for the daemon process [default: auto-derived] |
 | `-h` | `--help` | - | Display this help message |
 
 <br>
@@ -181,3 +208,9 @@ sudo supervisorctl restart cadence
 # Check the status of the Cadence process
 sudo supervisorctl status cadence
 ```
+
+<br>
+
+## Contribution Guidelines
+
+We welcome contributions to Cadence! Whether it's a bug fix, new feature, or documentation improvement, your help is appreciated. Please follow our [contributing guidelines](CONTRIBUTING.md) to get started.

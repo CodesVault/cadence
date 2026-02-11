@@ -12,6 +12,7 @@
   * [Environment Variables](#environment-variables)
 
 * **Features**
+  * [Process Registry](#process-registry)
   * [Logging](#logging)
   * [Process Management](#process-management)
   * [Debug Logging](#debug-logging)
