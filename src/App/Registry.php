@@ -22,7 +22,7 @@ class Registry
             return "Process '{$name}' is already running (PID: {$existing['pid']})";
         } elseif ($existing !== null && !$this->isPidAlive($existing['pid'])) {
             if ($script !== $existing['script']) {
-                return "Use unique name for running multiple daemon process";
+                return 'Use unique name for running multiple daemon process';
             }
         }
 

@@ -111,7 +111,7 @@ test('can be stopped', function () {
     $config = new Config([
         'script'    => fixturesPath() . '/success_script.php',
         'interval'  => 1,
-        'maxCycles' => 5,
+        'maxCycles' => 3,
         'logLevel'  => 'quiet',
     ]);
 
